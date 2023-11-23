@@ -1,7 +1,7 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import AuthService from "../services/auth.service.js";
-import titlecomponent from "../components/titlecomponent.vue";
+import titlecomponent from "../components/TitleComponent.vue";
 
 const loginEmail = ref("");
 const loginPassword = ref("");

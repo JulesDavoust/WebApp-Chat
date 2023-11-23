@@ -28,7 +28,7 @@ import NavBar from '../components/navBar.vue';
 import GameC from '../components/GameCardComp.vue';
 import SideBar from '../components/SideBar.vue';
 import AuthService from '../services/auth.service';
-import titlecomponent from '../components/titlecomponent.vue';
+import titlecomponent from '../components/TitleComponent.vue';
 
 export default {
     name: 'Home',

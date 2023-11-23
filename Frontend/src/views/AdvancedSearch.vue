@@ -30,7 +30,7 @@ import searchBar from '../components/searchBar.vue'
 import GameC from '../components/GameCardComp.vue';
 //import AuthService from '../services/auth.service'
 import SideBar from '../components/SideBar.vue';
-import titlecomponent from '../components/titlecomponent.vue';
+import titlecomponent from '../components/TitleComponent.vue';
 
 export default {
     name:'AdvancedSearch',

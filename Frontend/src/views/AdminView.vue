@@ -1,7 +1,7 @@
 <script setup>
 import { onMounted, ref, createApp } from 'vue';
 import { useToast } from 'vue-toastification';
-import TitleComponent from '../components/titlecomponent.vue';
+import TitleComponent from '../components/TitleComponent.vue';
 import AdminGameLine from '../components/AdminGameLine.vue';
 import AdminUserLine from '../components/AdminUserLine.vue';
 import AdminPlateformLine from '../components/AdminPlateformLine.vue';

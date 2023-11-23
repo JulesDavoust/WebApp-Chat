@@ -1,10 +1,12 @@
 <template>
-    <titlecomponent title="YouGame - Discussion" />
-    <SideBar/>
-    <div id="Game">
-        <GameCompHeader v-bind:GameName="InfoGame"/>
-        <GameCompSelected class="GameSelectedInGame" :name="InfoDiscussion.nameDiscussion"/>
-        <GameCompBody :messages="this.messages" v-on:sendMessage="this.sendMessage"/>
+    <div>
+        <titlecomponent title="YouGame - Discussion" />
+        <SideBar/>
+        <div id="Game">
+            <GameCompHeader v-bind:GameName="InfoGame"/>
+            <GameCompSelected class="GameSelectedInGame" :name="InfoDiscussion.nameDiscussion"/>
+            <GameCompBody :messages="this.messages" v-on:sendMessage="this.sendMessage"/>
+        </div>
     </div>
 </template>
 
@@ -15,7 +17,7 @@ import GameCompBody from '../components/GameCompBody.vue';
 import AuthService from '../services/auth.service'
 import GameCompSelected from '../components/GameCompSelected.vue';
 import SideBar from '../components/SideBar.vue';
-import titlecomponent from '../components/titlecomponent.vue';
+import titlecomponent from '../components/TitleComponent.vue';
 
 export default {
     name:'Game',

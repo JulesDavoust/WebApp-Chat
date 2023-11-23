@@ -2,7 +2,7 @@
 import { ref, onMounted } from 'vue';
 import { useToast } from 'vue-toastification';
 import AuthService from '../services/auth.service';
-import TitleComponent from '../components/titlecomponent.vue';
+import TitleComponent from '../components/TitleComponent.vue';
 import NavBar from '../components/navBar.vue';
 import SideBar from '../components/SideBar.vue';
 

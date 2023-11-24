@@ -93,7 +93,7 @@ export default {
                 localStorage.setItem("showSideBar1", "false")
                 this.showSideBar1 = localStorage.getItem("showSideBar1")
             }
-        await fetch(`http://35.181.3.12:8080/api/users/admin`,
+        await fetch(`http://localhost:8080/api/users/admin`,
         {
               headers: AuthService.authHeader()
         }

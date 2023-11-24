@@ -123,7 +123,7 @@ export default {
             const queryParams = [[this.selectedTitle],[this.selectedType],[this.selectedPublisher],[this.selectedYear],this.selectedPlatform]
             //const queryParams = [["Accel"],[""],[""],[""],[]]
             this.isLoading = true;
-            await fetch(`http://35.181.3.12:8080/api/intern/searchGame/${queryParams}`)
+            await fetch(`http://localhost:8080/api/intern/searchGame/${queryParams}`)
             .then(response => response.json())
             .then(data => {
                 console.log(data)
@@ -139,27 +139,27 @@ export default {
         }
     },
     async created(){
-        await fetch("http://35.181.3.12:8080/api/intern/allPlatformsGame")
+        await fetch("http://localhost:8080/api/intern/allPlatformsGame")
         .then(response => response.json())
         .then(data =>{
             this.Platforms = data;
             console.log(this.Platforms[0].namePlateform)
         })
 
-        await fetch("http://35.181.3.12:8080/api/intern/allTypesGame")
+        await fetch("http://localhost:8080/api/intern/allTypesGame")
         .then(response => response.json())
         .then(data => {
             this.typesGame = data;
             console.log(this.typesGame)
         })
 
-        await fetch("http://35.181.3.12:8080/api/intern/allPublishersGame")
+        await fetch("http://localhost:8080/api/intern/allPublishersGame")
         .then(response => response.json())
         .then(data => {
             this.publishersGame = data
         })
 
-        await fetch("http://35.181.3.12:8080/api/intern/allYearsGame")
+        await fetch("http://localhost:8080/api/intern/allYearsGame")
         .then(response => response.json())
         .then(data => {
             this.yearsGame = data

@@ -34,7 +34,7 @@ export default {
             InfoDiscussion:{},
             messages:[],
             pseudo:'',
-            socket : io('http://15.236.197.246:8080')
+            socket : io('http://15.236.86.190:8080')
         }
     },
     methods:{
@@ -76,7 +76,7 @@ export default {
         //     messageContainer.scrollTop = messageContainer.scrollHeight;
         // });
         const userId = 3;
-        fetch(`http://15.236.197.246:8080/api/users/getPseudoById`,
+        fetch(`http://15.236.86.190:8080/api/users/getPseudoById`,
         {
               headers: AuthService.authHeader()
         }
@@ -90,7 +90,7 @@ export default {
            console.error(error);
         }); 
         const paramsId = this.$route.params.id;
-        fetch(`http://15.236.197.246:8080/api/intern/getOneGame/${paramsId}`)
+        fetch(`http://15.236.86.190:8080/api/intern/getOneGame/${paramsId}`)
         .then(response=>response.json())
         .then(data => {
             console.log('my data : ',data);
@@ -100,7 +100,7 @@ export default {
            console.error(error);
         }); 
         const paramsIdDiscussion = this.$route.params.idDiscussion;
-        fetch(`http://15.236.197.246:8080/api/intern/getDiscussion/${paramsIdDiscussion}`)
+        fetch(`http://15.236.86.190:8080/api/intern/getDiscussion/${paramsIdDiscussion}`)
         .then(response=>response.json())
         .then(data => {
             console.log('my data : ',data);

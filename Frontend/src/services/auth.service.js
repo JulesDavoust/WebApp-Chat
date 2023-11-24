@@ -1,6 +1,6 @@
 import router from "../router";
 
-const API_URL = "http://15.236.197.246:8080/api/";
+const API_URL = "http://15.236.86.190:8080/api/";
 
 
 class AuthService {

@@ -50,7 +50,7 @@ export default {
             const userId = 3
             const idGame = this.idGame
             console.log(idGame)
-            await fetch(`http://13.39.240.4:8080/api/follows/follow`,
+            await fetch(`http://15.236.197.246:8080/api/follows/follow`,
             {
                 method: 'POST',
                 headers: Object.assign({ 'Content-Type': 'application/json' }, AuthService.authHeader()),
@@ -70,7 +70,7 @@ export default {
             const userId = 3
             const idGame = this.idGame
             console.log(idGame)
-            await fetch(`http://13.39.240.4:8080/api/follows/unfollow`,
+            await fetch(`http://15.236.197.246:8080/api/follows/unfollow`,
             {
                 method: 'DELETE',
                 headers: Object.assign({ 'Content-Type': 'application/json' }, AuthService.authHeader()),
@@ -91,7 +91,7 @@ export default {
         const userId = 3
         this.idGame_ = this.idGame 
         let Game
-        await fetch(`http://13.39.240.4:8080/api/follows/verifFollow`,
+        await fetch(`http://15.236.197.246:8080/api/follows/verifFollow`,
         {
               headers: AuthService.authHeader()
         }

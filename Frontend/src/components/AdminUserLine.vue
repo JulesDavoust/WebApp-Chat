@@ -15,7 +15,7 @@ if (props.userData.isAdmin == 1) {
 
 function onDelete() {
     const userLineDisplay = document.getElementById("user-" + idUser);
-    fetch('http://13.39.240.4:8080/api/users', {
+    fetch('http://15.236.197.246:8080/api/users', {
         method: 'DELETE',
         headers: Object.assign({ 'Content-Type': 'application/json' }, AuthService.authHeader()),
         body: JSON.stringify({ idUser: idUser })

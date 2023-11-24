@@ -21,7 +21,7 @@ const toastData = {
     icon: true,
     rtl: false
 };
-const API_URL = "http://15.236.86.190:8080/api/";
+const API_URL = "http://15.188.243.195:8080/api/";
 
 const user = ref({ username: "", emailUser: "", ppUser: "", isAdmin: 0 });
 const editUsername = ref(false);

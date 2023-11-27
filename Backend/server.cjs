@@ -9,7 +9,7 @@ const app = express();
 const server = http.createServer(app);
 
 var corsOptions = {
-  origin: "http://35.181.3.12"
+  origin: "http://13.37.216.193"
 };
 
 app.use(cors(corsOptions));
@@ -37,7 +37,7 @@ require("./routes/follows.routes.cjs")(app);
 
 const io = socketIo(server, {
   cors: {
-      origin: "http://35.181.3.12",
+      origin: "http://13.37.216.193",
       methods: ["GET", "POST"]
   }
 });

@@ -76,7 +76,7 @@ export default {
         //     messageContainer.scrollTop = messageContainer.scrollHeight;
         // });
         const userId = 3;
-        fetch(`http://172.31.44.54:8080/api/users/getPseudoById`,
+        fetch(`http://52.47.130.234:8080/api/users/getPseudoById`,
         {
               headers: AuthService.authHeader()
         }
@@ -90,7 +90,7 @@ export default {
            console.error(error);
         }); 
         const paramsId = this.$route.params.id;
-        fetch(`http://172.31.44.54:8080/api/intern/getOneGame/${paramsId}`)
+        fetch(`http://52.47.130.234:8080/api/intern/getOneGame/${paramsId}`)
         .then(response=>response.json())
         .then(data => {
             console.log('my data : ',data);
@@ -100,7 +100,7 @@ export default {
            console.error(error);
         }); 
         const paramsIdDiscussion = this.$route.params.idDiscussion;
-        fetch(`http://172.31.44.54:8080/api/intern/getDiscussion/${paramsIdDiscussion}`)
+        fetch(`http://52.47.130.234:8080/api/intern/getDiscussion/${paramsIdDiscussion}`)
         .then(response=>response.json())
         .then(data => {
             console.log('my data : ',data);

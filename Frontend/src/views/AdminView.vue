@@ -10,7 +10,7 @@ import router from '../router';
 import SideBar from '../components/SideBar.vue';
 
 const toast = useToast();
-const API_URL = "/api/";
+const API_URL = "http://172.31.44.54:8080/api/";
 
 const GAME_DATA_SLICE = 5;
 var lastGameRetrived = 0;

@@ -138,7 +138,7 @@ export default {
             const queryParams = [[this.$route.params.title],[''],[''],[''],['']]
             //const queryParams = [["Accel"],[""],[""],[""],[]]
             this.isLoading = true;
-            await fetch(`http://52.47.130.234:8080/api/intern/searchGame/${queryParams}`)
+            await fetch(`/api/intern/searchGame/${queryParams}`)
             .then(response => response.json())
             .then(data => {
                 console.log(data)

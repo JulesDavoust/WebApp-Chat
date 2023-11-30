@@ -122,7 +122,7 @@ export default {
     async mounted(){
         const userId = 3
         let Game
-        await fetch(`http://52.47.130.234:8080/api/follows/getAllDiscussions`,
+        await fetch(`/api/follows/getAllDiscussions`,
         {
               headers: AuthService.authHeader()
         }

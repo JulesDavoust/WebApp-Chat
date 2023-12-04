@@ -1,6 +1,6 @@
 module.exports = {
-    HOST: "172.31.39.128",
-    USER: "Admin",
+    HOST: "172.31.46.72",
+    USER: "Jules",
     PASSWORD: "Admin75017!",
     DB: "web-project-s7",
     dialect: "mysql",

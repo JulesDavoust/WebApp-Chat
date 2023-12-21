@@ -21,7 +21,7 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: .
-          file: ./Frontend
+          file: ./Frontend/Dockerfile
           push: true
           tags: julesdavoust/front-image:latest
         

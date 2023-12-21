@@ -20,6 +20,7 @@ jobs:
       - name: Push frontend image
         run: |
           docker tag front-image julesdavoust/front-image:$(date +%s)
+          docker images
           docker push julesdavoust/front-image:$(date +%s)
         
 

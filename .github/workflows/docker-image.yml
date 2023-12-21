@@ -21,7 +21,7 @@ jobs:
           password: ${{secrets.DOCKER_PW}}
       - name: Push frontend image
         run: |
-          docker tag front-image julesdavoust/front-image:${{ env.TIMESTAMP }}
+          docker tag front-image julesdavoust/front-image:front-image_${{ env.TIMESTAMP }}
           docker push julesdavoust/front-image:${{ env.TIMESTAMP }}
         
 
@@ -41,7 +41,7 @@ jobs:
           password: ${{secrets.DOCKER_PW}}
       - name: Push API image
         run: |
-          docker tag api-image julesdavoust/api-image:${{ env.TIMESTAMP }}
+          docker tag api-image julesdavoust/api-image:api-image_${{ env.TIMESTAMP }}
           docker push julesdavoust/api-image:${{ env.TIMESTAMP }}
 
   build-database:
@@ -60,5 +60,5 @@ jobs:
           password: ${{secrets.DOCKER_PW}}
       - name: Push database image
         run: |
-          docker tag bdd-image julesdavoust/bdd-image:${{ env.TIMESTAMP }}
+          docker tag bdd-image julesdavoust/bdd-image:bdd_image${{ env.TIMESTAMP }}
           docker push julesdavoust/bdd-image:${{ env.TIMESTAMP }}

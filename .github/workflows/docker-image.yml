@@ -11,7 +11,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
       - name: Set Timestamp
-        run: echo "TIMESTAMP=$(date +'%Y-%m-%d_%Hh%Mmin%Ss')" >> $GITHUB_ENV
+        run: echo "TIMESTAMP=$(date +'%Y-%m-%d_%Hh%M')" >> $GITHUB_ENV
       - name: Build frontend image
         run: cd Frontend && docker build -t front-image .
       - name: Login to Docker Hub
@@ -31,7 +31,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
       - name: Set Timestamp
-        run: echo "TIMESTAMP=$(date +'%Y-%m-%d_%Hh%Mmin%Ss')" >> $GITHUB_ENV
+        run: echo "TIMESTAMP=$(date +'%Y-%m-%d_%Hh%M')" >> $GITHUB_ENV
       - name: Build the API image
         run: cd Backend && docker build -t api-image .
       - name: Login to Docker Hub
@@ -50,7 +50,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
       - name: Set Timestamp
-        run: echo "TIMESTAMP=$(date +'%Y-%m-%d_%Hh%Mmin%Ss')" >> $GITHUB_ENV
+        run: echo "TIMESTAMP=$(date +'%Y-%m-%d_%Hh%M')" >> $GITHUB_ENV
       - name: Build the database image
         run: cd database && docker build -t bdd-image .
       - name: Login to Docker Hub

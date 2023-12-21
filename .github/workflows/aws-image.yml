@@ -13,8 +13,8 @@ jobs:
       - name: Set Timestamp
         run: echo "TIMESTAMP=$(date +'%Y-%m-%d_%Hh%M')" >> $GITHUB_ENV
       - name: Build frontend image
-        run: cd Frontend && docker build -t front-image:${{env.TIMESTAMP}} .
-       - name: Configure AWS credentials
+        run: cd Frontend && docker build -t front-image .
+      - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
           aws-access-key-id: AKIA3Z6WHNOCNDGMDIVN
@@ -27,9 +27,9 @@ jobs:
         env:
           ECR_REGISTRY: public.ecr.aws/v4m3k7t0
           ECR_REPOSITORY: test
-          IMAGE_TAG: front-image:${{env.TIMESTAMP}}
+          IMAGE_TAG: front-image_${{ env.TIMESTAMP }}
         run: |
-          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
+          docker tag front-image $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
         
 

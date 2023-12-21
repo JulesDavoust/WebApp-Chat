@@ -8,47 +8,44 @@ jobs:
   build-frontend:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - name: Build the frontend image
-        run: cd Frontend && docker build -t front-image .
-      - name: Login to Docker Hub
-        uses: docker/login-action@v2
+      - name: Build the frontend image 
+        uses: actions/checkout@v3
+      - name: Publish to docker
+        uses: docker/build-push-action@v1
         with:
-          username: julesdavoust
-          password: Julescraft75017!
-      - name: Push frontend image
-        run: |
-          docker tag front-image ${{ secrets.DOCKER_USERNAME }}/front-image:latest
-          docker push ${{ secrets.DOCKER_USERNAME }}/front-image:latest
+          username: ${{secrets.DOCKER_USER}}
+          password: ${{secrets.DOCKER_PW}}
+          repository: julesdavoust/webapp-chat
+          tags: latest, ${{github.run_number}}
 
-  build-api:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - name: Build the API image
-        run: cd Backend && docker build -t api-image .
-      - name: Login to Docker Hub
-        uses: docker/login-action@v2
-        with:
-          username: julesdavoust
-          password: Julescraft75017!
-      - name: Push API image
-        run: |
-          docker tag api-image ${{ secrets.DOCKER_USERNAME }}/api-image:latest
-          docker push ${{ secrets.DOCKER_USERNAME }}/api-image:latest
+  # build-api:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v3
+  #     - name: Build the API image
+  #       run: cd Backend && docker build -t api-image .
+  #     - name: Login to Docker Hub
+  #       uses: docker/login-action@v2
+  #       with:
+  #         username: julesdavoust
+  #         password: Julescraft75017!
+  #     - name: Push API image
+  #       run: |
+  #         docker tag api-image ${{ secrets.DOCKER_USERNAME }}/api-image:latest
+  #         docker push ${{ secrets.DOCKER_USERNAME }}/api-image:latest
 
-  build-database:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - name: Build the database image
-        run: cd database && docker build -t bdd-image .
-      - name: Login to Docker Hub
-        uses: docker/login-action@v2
-        with:
-          username: julesdavoust
-          password: Julescraft75017!
-      - name: Push database image
-        run: |
-          docker tag bdd-image ${{ secrets.DOCKER_USERNAME }}/bdd-image:latest
-          docker push ${{ secrets.DOCKER_USERNAME }}/bdd-image:latest
+  # build-database:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v3
+  #     - name: Build the database image
+  #       run: cd database && docker build -t bdd-image .
+  #     - name: Login to Docker Hub
+  #       uses: docker/login-action@v2
+  #       with:
+  #         username: julesdavoust
+  #         password: Julescraft75017!
+  #     - name: Push database image
+  #       run: |
+  #         docker tag bdd-image ${{ secrets.DOCKER_USERNAME }}/bdd-image:latest
+  #         docker push ${{ secrets.DOCKER_USERNAME }}/bdd-image:latest

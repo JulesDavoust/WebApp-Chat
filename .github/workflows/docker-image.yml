@@ -19,38 +19,40 @@ jobs:
           password: 17075Kayo_#2002!
       - name: Push frontend image
         run: |
-          docker tag front-image julesdavoust/front-image:latest
-          docker push julesdavoust/front-image:latest
+          docker tag front-image julesdavoust/front-image:$(date +%s)
+          docker push julesdavoust/front-image:$(date +%s)
         
 
   # build-api:
   #   runs-on: ubuntu-latest
   #   steps:
-  #     - uses: actions/checkout@v3
+  #     - name: Checkout
+  #       uses: actions/checkout@v4
   #     - name: Build the API image
   #       run: cd Backend && docker build -t api-image .
   #     - name: Login to Docker Hub
-  #       uses: docker/login-action@v2
+  #       uses: docker/login-action@v3
   #       with:
   #         username: julesdavoust
-  #         password: Julescraft75017!
+  #         password: 17075Kayo_#2002!
   #     - name: Push API image
   #       run: |
-  #         docker tag api-image ${{ secrets.DOCKER_USERNAME }}/api-image:latest
-  #         docker push ${{ secrets.DOCKER_USERNAME }}/api-image:latest
+  #         docker tag api-image julesdavoust/api-image:$(date +%s)
+  #         docker push julesdavoust/api-image:$(date +%s)
 
   # build-database:
   #   runs-on: ubuntu-latest
   #   steps:
-  #     - uses: actions/checkout@v3
+  #     - name: Checkout
+  #       uses: actions/checkout@v4
   #     - name: Build the database image
   #       run: cd database && docker build -t bdd-image .
   #     - name: Login to Docker Hub
-  #       uses: docker/login-action@v2
+  #       uses: docker/login-action@v3
   #       with:
   #         username: julesdavoust
-  #         password: Julescraft75017!
+  #         password: 17075Kayo_#2002!
   #     - name: Push database image
   #       run: |
-  #         docker tag bdd-image ${{ secrets.DOCKER_USERNAME }}/bdd-image:latest
-  #         docker push ${{ secrets.DOCKER_USERNAME }}/bdd-image:latest
+  #         docker tag bdd-image julesdavoust/bdd-image:latest
+  #         docker push julesdavoust/bdd-image:latest

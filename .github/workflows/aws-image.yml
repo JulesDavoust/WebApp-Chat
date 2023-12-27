@@ -91,3 +91,6 @@ jobs:
         run: |
           docker tag bdd-image $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+
+
+          

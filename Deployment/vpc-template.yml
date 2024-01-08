@@ -1,0 +1,398 @@
+Parameters:
+  VpcCIDR:
+    Type: String
+    Default: 10.0.0.0/16
+    Description: Enter VPC CIDR
+  
+  SubnetCIDR:
+    Type: String
+    Default: 10.0.1.0/24
+    Description: Enter CIDR for subnet
+
+  PrivateIPv4BDD:
+    Type: String
+    Default: 10.0.1.5
+    Description: Enter private IPv4 for DB instance
+
+  PrivateIPv4API:
+    Type: String
+    Default: 10.0.1.6
+    Description: Enter private IPv4 for API instance
+
+  PrivateIPv4FRONT:
+    Type: String
+    Default: 10.0.1.7
+    Description: Enter private IPv4 for frontend instance
+
+  URLGit:
+    Type: String
+    Default: ""
+    Description: Enter repository's url from git
+  
+  Region:
+    Type: String
+    Default: eu-west-3a
+    Description: Enter your region
+  
+Resources:
+  myVPC:
+    Type: AWS::EC2::VPC
+    Properties:
+      CidrBlock:
+        !Ref VpcCIDR
+      EnableDnsHostnames: true
+      EnableDnsSupport: true
+      Tags: 
+        - Key: Name
+          Value: myVPC
+  
+  myInternetGateway:
+    Type: AWS::EC2::InternetGateway
+    Properties:
+      Tags:
+      - Key: Name
+        Value: myInternetGateway
+  
+  AttachGateway:
+    Type: AWS::EC2::VPCGatewayAttachment
+    Properties:
+      VpcId:
+        !Ref myVPC
+      InternetGatewayId:
+        !Ref myInternetGateway
+
+  myPublicSubnet:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId:
+        !Ref myVPC
+      CidrBlock:
+        !Ref SubnetCIDR
+      AvailabilityZone: !Ref Region
+      Tags:
+      - Key: Name
+        Value: myPublicSubnet
+  
+  myRouteTable:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId:  
+        !Ref myVPC
+      Tags:
+      - Key: Name
+        Value: myRouteTable
+  
+  myRoute:
+    Type: AWS::EC2::Route
+    Properties:
+       RouteTableId:
+         !Ref myRouteTable
+       DestinationCidrBlock: 0.0.0.0/0
+       GatewayId:
+         !Ref myInternetGateway
+  
+  mySubnetRouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId:
+        !Ref myPublicSubnet
+      RouteTableId:
+        !Ref myRouteTable
+
+  S3Bucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: webapp-chat-bucket
+
+  ECRRepository:
+    Type: AWS::ECR::Repository
+    Properties:
+      EmptyOnDelete: true
+      RepositoryName: webapp-chat-repository
+
+  EC2Role:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: EC2Role
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: ec2.amazonaws.com
+            Action: sts:AssumeRole
+      Policies:
+        - PolicyName: EC2RolePolicy
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action:
+                  - ecr:*
+                Resource: "*"
+              - Effect: Allow
+                Action:
+                  - s3:*
+                Resource:
+                  - !Sub "arn:aws:s3:::${S3Bucket}/*"
+              - Effect : Allow
+                Action:
+                  - cloudformation:*
+                Resource :
+                  - !Sub "arn:aws:cloudformation:${AWS::Region}:*:stack/*"
+                  - "*"
+
+
+  FrontSecurityTemplateV2:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Voici mon groupe de securite cree avec un template
+      GroupName: Front-Security-template-V2
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 22
+          ToPort: 22
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+          CidrIp: 0.0.0.0/0
+      VpcId:
+        !Ref myVPC
+
+  ApiTemplate:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Group de securite api
+      GroupName: Api-Template
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 8080
+          ToPort: 8080
+          SourceSecurityGroupId: !Ref FrontSecurityTemplateV2
+        - IpProtocol: tcp
+          FromPort: 22
+          ToPort: 22
+          CidrIp: 0.0.0.0/0
+      VpcId:
+        !Ref myVPC
+  
+  BddTemplate:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Group de securite de la bdd
+      GroupName: Bdd-Template
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 3306
+          ToPort: 3306
+          SourceSecurityGroupId: !Ref ApiTemplate
+        - IpProtocol: tcp
+          FromPort: 22
+          ToPort: 22
+          CidrIp: 0.0.0.0/0
+      VpcId: 
+        !Ref myVPC
+
+  KeyPairEC2:
+    Type: AWS::EC2::KeyPair
+    Properties:
+      KeyName: MyKeyPairEC2
+
+  EC2InstanceProfile:
+    Type: AWS::IAM::InstanceProfile
+    Properties:
+      InstanceProfileName: EC2-Profile
+      Roles: 
+        - !Ref EC2Role
+
+
+  EC2InstanceBDD:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: ami-0302f42a44bf53a45
+      AvailabilityZone: !Ref Region
+      InstanceType: t2.micro
+      KeyName: MyKeyPairEC2
+      IamInstanceProfile: !Ref EC2InstanceProfile
+      NetworkInterfaces:
+        - AssociatePublicIpAddress: true
+          DeviceIndex: 0
+          PrivateIpAddress: !Ref PrivateIPv4BDD
+          SubnetId:
+            !Ref myPublicSubnet
+          GroupSet:
+            - !Ref BddTemplate
+      UserData:
+        Fn::Base64:
+          !Sub |
+            #!/bin/bash -xe
+            sudo su
+            yum update -y
+            yum install -y git docker
+            git clone ${URLGit}
+            systemctl start docker
+            docker volume create db-data
+            docker build -t bdd-image /WebApp-Chat/database/
+            mkdir /backup && touch /etc/systemd/system/stop_script.service && touch /etc/systemd/system/start_script.service && touch /usr/local/bin/start_script.sh && touch /usr/local/bin/stop_script.sh
+
+            echo '#!/bin/bash
+            container_name="bdd-container"
+            volume_name="db-data"
+            if [ "$(docker volume ls -q -f name=db-data)" ]; then
+                if [ "$(docker ps -a -q -f name=bdd-container)" ]; then
+                    docker start bdd-container
+                else
+                    docker run -d -p 3306:3306 --name bdd-container -v db-data:/var/lib/mysql bdd-image
+                fi
+            fi' > /usr/local/bin/start_script.sh
+
+            echo '#!/bin/bash
+            rm -f /backup/backup.tar.gz
+            aws s3 rm s3://webapp-chat-bucket/backup.tar.gz
+            docker run --rm -v db-data:/data -v /backup:/backup busybox tar czvf /backup/backup.tar.gz -C /data .
+            aws s3 cp /backup/backup.tar.gz s3://webapp-chat-bucket/' > /usr/local/bin/stop_script.sh
+            
+            chmod +755 /usr/local/bin/stop_script.sh
+            chmod +755 /usr/local/bin/start_script.sh
+
+            echo "[Unit]
+            Description=Script d'arrêt
+            [Service]
+            Type=oneshot
+            ExecStart=/bin/true
+            ExecStop=/usr/local/bin/stop_script.sh
+            [Install]
+            WantedBy=multi-user.target" > /etc/systemd/system/stop_script.service
+
+            echo "[Unit]
+            Description=Script de démarrage
+            [Service]
+            Type=oneshot
+            ExecStart=/usr/local/bin/start_script.sh
+            [Install]
+            WantedBy=multi-user.target" > /etc/systemd/system/start_script.service
+
+            systemctl enable start_script.service
+            systemctl enable stop_script.service
+            docker run -d -p 3306:3306 --name bdd-container -v db-data:/var/lib/mysql bdd-image
+
+            STACK_NAME=$(aws cloudformation describe-stacks --query "Stacks[0].StackName" --output text)
+            ECR_URI=$(aws cloudformation describe-stacks --stack-name $STACK_NAME --query "Stacks[0].Outputs[?OutputKey=='ECRRepositoryUri'].OutputValue" --output text)
+            aws ecr get-login-password --region ${AWS::Region} | docker login --username AWS --password-stdin $ECR_URI
+            docker tag bdd-image:latest $ECR_URI:bdd-image 
+            docker push $ECR_URI:bdd-image 
+            
+
+
+  EC2InstanceAPI:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: ami-0302f42a44bf53a45
+      AvailabilityZone: !Ref Region
+      InstanceType: t2.micro
+      KeyName: MyKeyPairEC2
+      IamInstanceProfile: !Ref EC2InstanceProfile
+      NetworkInterfaces:
+        - AssociatePublicIpAddress: true
+          DeviceIndex: 0
+          PrivateIpAddress: !Ref PrivateIPv4API
+          SubnetId:
+            !Ref myPublicSubnet
+          GroupSet:
+            - !Ref ApiTemplate
+      UserData:
+        Fn::Base64:
+          !Sub |
+            #!/bin/bash -xe
+            sudo su
+            yum update -y
+            yum install -y git docker
+            git clone ${URLGit}
+            systemctl start docker
+            touch /etc/systemd/system/start_script.service && touch /usr/local/bin/start_script.sh
+            
+
+            echo '#!/bin/bash
+            if [ "$(docker ps -a -q -f name=api-container)" ]; then
+                docker start api-container
+            else
+                docker run -d -p 8080:8080 --name api-container api-image
+            fi' > /usr/local/bin/start_script.sh
+            
+            chmod +755 /usr/local/bin/start_script.sh
+
+            echo "[Unit]
+            Description=Script de démarrage
+
+            [Service]
+            Type=oneshot
+            ExecStart=/usr/local/bin/start_script.sh
+
+            [Install]
+            WantedBy=multi-user.target" > /etc/systemd/system/start_script.service
+
+            systemctl enable start_script.service
+
+            docker build -t api-image /WebApp-Chat/Backend/
+            docker run -d -p 8080:8080 --name api-container api-image
+
+
+  EC2InstanceFRONT:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: ami-0302f42a44bf53a45
+      AvailabilityZone: !Ref Region
+      InstanceType: t2.micro
+      KeyName: MyKeyPairEC2
+      IamInstanceProfile: !Ref EC2InstanceProfile
+      UserData:
+        Fn::Base64:
+          !Sub |
+            #!/bin/bash -xe
+            sudo su
+            yum update -y
+            yum install -y git docker
+            git clone ${URLGit}
+
+            touch /etc/systemd/system/start_script.service && touch /usr/local/bin/start_script.sh
+            
+
+            echo '#!/bin/bash
+            if [ "$(docker ps -a -q -f name=front-container)" ]; then
+                docker start front-container
+            else
+                docker run --rm -d -p 80:80 --name front-container front-image
+            fi' > /usr/local/bin/start_script.sh
+            
+            chmod +755 /usr/local/bin/start_script.sh
+
+            echo "[Unit]
+            Description=Script de démarrage
+
+            [Service]
+            Type=oneshot
+            ExecStart=/usr/local/bin/start_script.sh
+
+            [Install]
+            WantedBy=multi-user.target" > /etc/systemd/system/start_script.service
+ 
+            systemctl enable start_script.service
+
+            sed -i "s|\$PrivateIPv4API|${PrivateIPv4API}|g" /WebApp-Chat/Frontend/default.conf
+            systemctl start docker
+            docker build -t front-image /WebApp-Chat/Frontend/
+            docker run --rm -d -p 80:80 --name front-container front-image
+      NetworkInterfaces:
+        - AssociatePublicIpAddress: true
+          DeviceIndex: 0
+          PrivateIpAddress: !Ref PrivateIPv4FRONT
+          SubnetId:
+            !Ref myPublicSubnet
+          GroupSet:
+            - !Ref FrontSecurityTemplateV2
+
+Outputs:
+  ECRRepositoryUri:
+    Value: !Sub "${AWS::AccountId}.dkr.ecr.${AWS::Region}.amazonaws.com/webapp-chat-repository"
+    Description: "URI du registre ECR pour l'image Docker"

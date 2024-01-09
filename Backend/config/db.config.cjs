@@ -1,5 +1,5 @@
 module.exports = {
-    HOST: "WebAppChat-BDD-DiscoveryService.WebAppChat-BDD-Namespace",
+    HOST: "10.0.1.5",
     USER: "Jules",
     PASSWORD: "Admin75017!",
     DB: "web-project-s7",

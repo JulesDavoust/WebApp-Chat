@@ -223,6 +223,9 @@ Resources:
             !Ref myPublicSubnet
           GroupSet:
             - !Ref BddTemplate
+      Tags:
+        - Key: Name
+          Value: WebAppChat-InstanceBDD
       UserData:
         Fn::Base64:
           !Sub |
@@ -301,6 +304,9 @@ Resources:
             !Ref myPublicSubnet
           GroupSet:
             - !Ref ApiTemplate
+      Tags:
+        - Key: Name
+          Value: WebAppChat-InstanceAPI
       UserData:
         Fn::Base64:
           !Sub |
@@ -346,6 +352,9 @@ Resources:
       InstanceType: t2.micro
       KeyName: MyKeyPairEC2
       IamInstanceProfile: !Ref EC2InstanceProfile
+      Tags:
+        - Key: Name
+          Value: WebAppChat-InstanceFRONT
       UserData:
         Fn::Base64:
           !Sub |
